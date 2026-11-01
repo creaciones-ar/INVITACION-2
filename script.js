@@ -1,49 +1,46 @@
 /* ===== CONFIGURACIÓN (editar solo acá) ===== */
 const CONFIG = {
-  fecha: "February 21, 2027 21:00:00",
-  youtubeId: "rtOvBOTyX00",
-  whatsapp: "5491178501814", // 54 + 9 + número
-  albumUrl: "https://photos.app.goo.gl/GriDHPSV9NEhcxSk6", // álbum compartido
-  playlistUrl: "https://open.spotify.com/playlist/17ImBOYgtzpeEXi9pUZCVB?si=5138f4da72f34aaa&pt=59f5216a742de494a345b4397de74166", // LINK DE INVITACIÓN de la playlist colaborativa de Spotify (pegalo entre las comillas). Si queda vacío, la sección "Nuestra playlist" no aparece.
-  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Priscila"
+  fecha: "December 13, 2026 21:00:00",        // HORA PROVISORIA (21:00): confirmar con Isabella
+  youtubeId: "",                               // código del video de YouTube de la canción. Vacío = no aparece el reproductor
+  whatsapp: "5491165286830",                   // 54 + 9 + número (confirmar que sea el WhatsApp)
+  mapsUrl: "",                                 // link de Google Maps del salón. Vacío = no aparece el botón
+  alias: "",                                   // alias o CBU. Vacío = no aparece la sección de regalos
+  albumUrl: "",                                // álbum compartido. Vacío = no aparece la sección del QR
+  playlistUrl: "",                             // link de invitación de la playlist de Spotify. Vacío = no aparece
+  confirmarAntes: "",                          // por ejemplo "Confirmar antes del 1 de diciembre". Vacío = no aparece
+  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Isabella ❤️"
 };
 
 const $ = id => document.getElementById(id);
 
-/* ===== Links, QR ===== */
-$('album-link').href = CONFIG.albumUrl;
+/* ===== Secciones opcionales: aparecen solo si hay dato en CONFIG ===== */
+const show = (...ids) => ids.forEach(i => $(i).classList.remove('hidden'));
 $('wa-btn').href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.mensajeWa)}`;
-
-/* El QR se genera en el propio celular (no depende de ningún servicio externo).
-   Si por alguna razón la librería no carga, usa el servicio online como respaldo. */
-(function makeQR() {
-  const img = $('qr');
-  try {
-    const qr = qrcode(0, 'M');           // 'M' = corrección de errores media
-    qr.addData(CONFIG.albumUrl);
-    qr.make();
-    img.src = qr.createDataURL(8, 0);    // 8 = tamaño de cada cuadradito, 0 = sin margen (el marco blanco ya lo da el CSS)
-    img.style.imageRendering = 'pixelated';
+if (CONFIG.mapsUrl) { $('maps-btn').href = CONFIG.mapsUrl; show('maps-btn'); }
+if (CONFIG.alias) { $('alias').textContent = CONFIG.alias; show('gift-section', 'gift-respiro'); }
+if (CONFIG.confirmarAntes) { $('confirm-note').textContent = CONFIG.confirmarAntes; show('confirm-note'); }
+if (CONFIG.playlistUrl) { $('playlist-link').href = CONFIG.playlistUrl; show('playlist-section', 'playlist-respiro'); }
+if (CONFIG.albumUrl) {
+  $('album-link').href = CONFIG.albumUrl;
+  show('album-section', 'album-respiro');
+  try {                                              // el QR se genera en el propio celular
+    const qr = qrcode(0, 'M'); qr.addData(CONFIG.albumUrl); qr.make();
+    $('qr').src = qr.createDataURL(8, 0); $('qr').style.imageRendering = 'pixelated';
   } catch (err) {
-    console.warn('QR local falló, uso servicio online', err);
-    img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=' + encodeURIComponent(CONFIG.albumUrl);
+    $('qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0&data=' + encodeURIComponent(CONFIG.albumUrl);
   }
-})();
-
-/* ===== Playlist colaborativa: la sección solo aparece si hay link en playlistUrl ===== */
-if (CONFIG.playlistUrl) {
-  $('playlist-link').href = CONFIG.playlistUrl;
-  $('playlist-section').classList.remove('hidden');
-  $('playlist-respiro').classList.remove('hidden');
 }
+if (!CONFIG.youtubeId) $('player').classList.add('hidden');   // sin canción no hay reproductor
 
 /* ===== Música (YouTube oculto + reproductor propio) ===== */
 let yt, ticker, ready = false, wantPlay = false;
 const playBtn = $('btn-play'), bar = $('progress');
 
-const tag = document.createElement('script');
-tag.src = 'https://www.youtube.com/iframe_api';
-document.head.appendChild(tag);
+if (CONFIG.youtubeId) {
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+}
 
 window.onYouTubeIframeAPIReady = () => {
   yt = new YT.Player('yt-player', {
@@ -63,7 +60,8 @@ window.onYouTubeIframeAPIReady = () => {
   });
 };
 const isPlaying = () => ready && yt.getPlayerState() === 1;
-playBtn.onclick = () => ready && (isPlaying() ? yt.pauseVideo() : yt.playVideo());
+let userPaused = false, needResume = false;     // userPaused: pausó a propósito
+playBtn.onclick = () => { if (!ready) return; if (isPlaying()) { userPaused = true; yt.pauseVideo(); } else { userPaused = false; yt.playVideo(); } };
 bar.oninput = () => ready && yt.seekTo(yt.getDuration() * bar.value / 100, true);
 $('btn-prev').onclick = $('btn-next').onclick = () => ready && (yt.seekTo(0, true), yt.playVideo());
 $('btn-repeat').onclick = e => e.currentTarget.classList.toggle('on');
@@ -167,3 +165,25 @@ function fitStory() {
 document.querySelectorAll('.story-photos img').forEach(i => i.addEventListener('load', fitStory));
 window.addEventListener('resize', fitStory);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStory);
+
+
+/* ===== Al volver de Google Maps u otra app, la música sigue sola ===== */
+function resumeMusic() {
+  if (!ready || !wantPlay || userPaused || isPlaying()) return;
+  yt.playVideo(); needResume = true;              // si el celular lo bloquea, se reanuda con el próximo toque
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(resumeMusic, 300); });
+window.addEventListener('pageshow', () => setTimeout(resumeMusic, 300));
+document.addEventListener('touchend', e => {
+  if (!needResume || e.target.closest('.controls')) return;
+  needResume = false;
+  if (!userPaused && !isPlaying()) yt.playVideo();
+}, { passive: true });
+
+/* ===== El ícono del calendario se anima una sola vez: se reinicia al llegar a verlo ===== */
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { const im = e.target; im.src = im.src.split('?')[0] + '?t=' + Date.now(); }
+  }), { threshold: 0.6 });
+  document.querySelectorAll('img[data-replay]').forEach(i => io.observe(i));
+}
