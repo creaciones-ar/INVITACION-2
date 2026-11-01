@@ -183,7 +183,21 @@ document.addEventListener('touchend', e => {
 /* ===== El ícono del calendario se anima una sola vez: se reinicia al llegar a verlo ===== */
 if ('IntersectionObserver' in window) {
   const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) { const im = e.target; im.src = im.src.split('?')[0] + '?t=' + Date.now(); }
+    if (e.isIntersecting && e.target.getAttribute('src')) { const im = e.target; im.src = im.src.split('?')[0] + '?t=' + Date.now(); }
   }), { threshold: 0.6 });
   document.querySelectorAll('img[data-replay]').forEach(i => io.observe(i));
 }
+
+/* ===== Íconos animados: busca el archivo con o sin "_1" en el nombre (icono-camara_1.gif o icono-camara.gif) ===== */
+document.querySelectorAll('img[data-icon]').forEach(img => {
+  const n = img.dataset.icon, list = [`${n}_1.gif`, `${n}.gif`, `${n}_1.GIF`, `${n}.GIF`];
+  let i = 0;
+  const next = () => {
+    if (i >= list.length) { console.warn('No se encontró el ícono', n); return; }
+    const p = new Image(), u = list[i++] + '?v=1';
+    p.onload = () => { img.src = u; };
+    p.onerror = next;
+    p.src = u;
+  };
+  next();
+});
