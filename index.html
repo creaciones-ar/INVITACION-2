@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mis XV - Vanessa</title>
+<link rel="stylesheet" href="styles.css?v=1">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="yt-player"></div>
+
+<!-- 1. BIENVENIDA -->
+<section id="welcome">
+  <p class="soft">Mis quince años</p>
+  <h1>Vanessa</h1>
+  <p class="soft">Quiero que seas parte de este momento tan importante para mí</p>
+  <button id="enter" class="btn">Ingresar</button>
+</section>
+
+<main id="main" class="hidden">
+
+  <!-- 2. PORTADA + MÚSICA + CUENTA REGRESIVA -->
+  <section class="cover">
+    <div class="ph tall"><img data-foto="1" alt="Vanessa"></div>
+    <h2 class="title">Mis XV Vanessa</h2>
+    <div class="player">
+      <input type="range" id="progress" min="0" max="100" value="0" aria-label="Progreso">
+      <div class="controls">
+        <button id="btn-shuffle" aria-label="Aleatorio"><svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg></button>
+        <button id="btn-prev" aria-label="Anterior"><svg viewBox="0 0 24 24" class="fill"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+        <button id="btn-play" class="play" aria-label="Reproducir / pausar">
+          <svg class="i-pause fill" viewBox="0 0 24 24"><path d="M7 5h3v14H7zM14 5h3v14h-3z"/></svg>
+          <svg class="i-play fill" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button id="btn-next" aria-label="Siguiente"><svg viewBox="0 0 24 24" class="fill"><path d="M16 5h2v14h-2zM4 5l11 7L4 19z"/></svg></button>
+        <button id="btn-repeat" class="on" aria-label="Repetir"><svg viewBox="0 0 24 24"><path d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/></svg></button>
+      </div>
+    </div>
+    <div id="countdown" class="count">
+      <div><b id="days">00</b><small>días</small></div>
+      <div><b id="hours">00</b><small>horas</small></div>
+      <div><b id="minutes">00</b><small>minutos</small></div>
+      <div><b id="seconds">00</b><small>segundos</small></div>
+    </div>
+  </section>
+
+  <!-- 3. FRASE + FOTOS -->
+  <section class="band"><p class="quote">Hagamos de esta noche un recuerdo inolvidable</p></section>
+  <section class="gallery"><div id="gal" class="track"></div></section>
+
+  <!-- 4. CUÁNDO / DÓNDE / DRESS CODE -->
+  <section class="info">
+    <img src="icono-calendario.gif?v=1" alt="" class="ico-gif" aria-hidden="true" data-replay>
+    <h3>¿Cuándo?</h3>
+    <p class="big">Viernes 16 de abril de 2027</p>
+    <p>21:00 hs</p>
+  </section>
+  <section class="info alt">
+    <img src="icono-ubicacion.gif?v=1" alt="" class="ico-gif" aria-hidden="true" onerror="this.remove()">
+    <h3>¿Dónde?</h3>
+    <p>Te espero para festejar juntos</p>
+    <a id="maps" class="btn light" target="_blank" rel="noopener" href="#">Cómo llegar</a>
+  </section>
+  <section class="info">
+    <img src="icono-vestimenta.gif?v=1" alt="" class="ico-gif" aria-hidden="true">
+    <h3>Dress code</h3>
+    <p class="big">Elegante</p>
+  </section>
+
+  <!-- 5. TRIVIA -->
+  <section class="info alt">
+    <img src="icono-trivia.gif?v=1" alt="" class="ico-gif" aria-hidden="true">
+    <h3>¿Cuánto me conocés?</h3>
+    <div id="trivia-box"><p>Jugamos un poco y descubrimos cuánto sabés de mí</p><button id="trivia-start" class="btn light">Comenzar trivia</button></div>
+  </section>
+
+  <!-- 6. REGALOS -->
+  <section class="info">
+    <img src="icono-regalo.gif?v=1" alt="" class="ico-gif" aria-hidden="true" onerror="this.remove()">
+    <h3>Regalos</h3>
+    <p>Nada es más importante que tu presencia, pero si deseas hacerme un presente podés depositarlo en la siguiente cuenta</p>
+    <button id="gift-btn" class="btn">Ver cuenta</button>
+  </section>
+
+  <!-- 7. CONFIRMACIÓN -->
+  <section class="info alt">
+    <img src="icono-confirmar.gif?v=1" alt="" class="ico-gif" aria-hidden="true">
+    <h3>Confirmá tu asistencia</h3>
+    <p>Avisame por WhatsApp si venís</p>
+    <a id="wa-btn" class="btn light" target="_blank" rel="noopener" href="#">Confirmar</a>
+  </section>
+
+  <!-- 8. CIERRE -->
+  <section class="closing">
+    <div class="ph"><img id="closing-img" alt="Vanessa"></div>
+    <h2 class="title">Te espero</h2>
+  </section>
+</main>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <button id="close" class="x" aria-label="Cerrar">×</button>
+    <h3>Regalos</h3>
+    <p>Alias</p>
+    <p class="big" id="alias">alias</p>
+    <button id="copy-alias" class="btn light">Copiar alias</button>
+  </div>
+</div>
+
+<script src="script.js?v=1"></script>
+</body>
+</html>
