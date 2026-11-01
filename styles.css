@@ -245,3 +245,4 @@ body{font-family:'Montserrat',sans-serif;color:var(--navy);text-align:center;lin
 .cover{padding-top:175px}                       /* deja lugar a la corona y la rosa del fondo de arriba */
 .closing p:not(.script){font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:1.5rem;line-height:1.5;color:var(--navy);text-wrap:balance}
 .rsvp-card .ico-gif{margin-bottom:0}
+img.ico-gif:not([src]){display:none}      /* si un ícono no se encuentra, no deja un hueco roto */
