@@ -5,8 +5,8 @@ const CONFIG = {
   whatsapp: "5491165286830",                   // 54 + 9 + número (confirmar que sea el WhatsApp)
   mapsUrl: "",                                 // link de Google Maps del salón. Vacío = no aparece el botón
   alias: "",                                   // alias o CBU. Vacío = no aparece la sección de regalos
-  albumUrl: "",                                // álbum compartido. Vacío = no aparece la sección del QR
-  playlistUrl: "",                             // link de invitación de la playlist de Spotify. Vacío = no aparece
+  albumUrl: "https://photos.app.goo.gl/WpPPTVfGd7tURbah6",   // álbum compartido de Isabella (QR y botón)
+  playlistUrl: "https://open.spotify.com/playlist/5Sf5nsXzMx0s9bSrUkwPwW?si=f115921d2ada4890&pt=f36ebe1e791f43576a4096c71f848620",   // playlist de Isabella
   confirmarAntes: "",                          // por ejemplo "Confirmar antes del 1 de diciembre". Vacío = no aparece
   mensajeWa: "Hola! Confirmo mi asistencia a los XV de Isabella ❤️"
 };
