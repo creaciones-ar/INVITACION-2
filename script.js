@@ -1,14 +1,14 @@
 /* ===== CONFIGURACIÓN (editar solo acá) ===== */
 const CONFIG = {
   fecha: "December 13, 2026 21:00:00",        // HORA PROVISORIA (21:00): confirmar con Isabella
-  youtubeId: "",                               // código del video de YouTube de la canción. Vacío = no aparece el reproductor
+  youtubeId: "j3ObHjm1fAE",                               // código del video de YouTube de la canción. Vacío = no aparece el reproductor
   whatsapp: "5491165286830",                   // 54 + 9 + número (confirmar que sea el WhatsApp)
-  mapsUrl: "",                                 // link de Google Maps del salón. Vacío = no aparece el botón
-  alias: "",                                   // alias o CBU. Vacío = no aparece la sección de regalos
+  mapsUrl: "https://maps.app.goo.gl/y8uJtqJ5FoqePBLZ6",                                 // link de Google Maps del salón. Vacío = no aparece el botón
+  alias: "Isabellaxv",                                   // alias o CBU. Vacío = no aparece la sección de regalos
   albumUrl: "https://photos.app.goo.gl/WpPPTVfGd7tURbah6",   // álbum compartido de Isabella (QR y botón)
   playlistUrl: "https://open.spotify.com/playlist/5Sf5nsXzMx0s9bSrUkwPwW?si=f115921d2ada4890&pt=f36ebe1e791f43576a4096c71f848620",   // playlist de Isabella
-  confirmarAntes: "",                          // por ejemplo "Confirmar antes del 1 de diciembre". Vacío = no aparece
-  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Isabella ❤️"
+  confirmarAntes: "Confirmar antes del 1 de diciembre",                          // por ejemplo "Confirmar antes del 1 de diciembre". Vacío = no aparece
+  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Isabella"
 };
 
 const $ = id => document.getElementById(id);
