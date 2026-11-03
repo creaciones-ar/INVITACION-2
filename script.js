@@ -1,14 +1,15 @@
 /* ===== CONFIGURACIÓN (editar solo acá) ===== */
 const CONFIG = {
   fecha: "December 13, 2026 21:00:00",        // HORA PROVISORIA (21:00): confirmar con Isabella
-  youtubeId: "j3ObHjm1fAE",                               // código del video de YouTube de la canción. Vacío = no aparece el reproductor
+  youtubeId: "",                               // código del video de YouTube de la canción. Vacío = no aparece el reproductor
+  inicio: 30,                                  // segundo desde el que suena la canción (30 = salta los primeros 30 s de intro)
   whatsapp: "5491165286830",                   // 54 + 9 + número (confirmar que sea el WhatsApp)
-  mapsUrl: "https://maps.app.goo.gl/y8uJtqJ5FoqePBLZ6",                                 // link de Google Maps del salón. Vacío = no aparece el botón
-  alias: "Isabellaxv",                                   // alias o CBU. Vacío = no aparece la sección de regalos
+  mapsUrl: "",                                 // link de Google Maps del salón. Vacío = no aparece el botón
+  alias: "",                                   // alias o CBU. Vacío = no aparece la sección de regalos
   albumUrl: "https://photos.app.goo.gl/WpPPTVfGd7tURbah6",   // álbum compartido de Isabella (QR y botón)
   playlistUrl: "https://open.spotify.com/playlist/5Sf5nsXzMx0s9bSrUkwPwW?si=f115921d2ada4890&pt=f36ebe1e791f43576a4096c71f848620",   // playlist de Isabella
-  confirmarAntes: "Confirmar antes del 1 de diciembre",                          // por ejemplo "Confirmar antes del 1 de diciembre". Vacío = no aparece
-  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Isabella"
+  confirmarAntes: "",                          // por ejemplo "Confirmar antes del 1 de diciembre". Vacío = no aparece
+  mensajeWa: "Hola! Confirmo mi asistencia a los XV de Isabella ❤️"
 };
 
 const $ = id => document.getElementById(id);
@@ -45,25 +46,28 @@ if (CONFIG.youtubeId) {
 window.onYouTubeIframeAPIReady = () => {
   yt = new YT.Player('yt-player', {
     height: '1', width: '1', videoId: CONFIG.youtubeId,
-    playerVars: { playsinline: 1, controls: 0, loop: 1, playlist: CONFIG.youtubeId },
+    playerVars: { playsinline: 1, controls: 0, start: CONFIG.inicio },
     events: {
       onReady: () => { ready = true; if (wantPlay) yt.playVideo(); },
       onStateChange: e => {
+        if (e.data === YT.PlayerState.ENDED && $('btn-repeat').classList.contains('on')) { yt.seekTo(CONFIG.inicio, true); yt.playVideo(); return; }   // al terminar, vuelve a empezar sin la intro
         const playing = e.data === YT.PlayerState.PLAYING;
         playBtn.classList.toggle('playing', playing);
         clearInterval(ticker);
         if (playing) ticker = setInterval(() => {
-          bar.value = (yt.getCurrentTime() / yt.getDuration()) * 100 || 0;
+          bar.value = Math.max(0, (yt.getCurrentTime() - CONFIG.inicio) / span() * 100) || 0;
         }, 500);
       }
     }
   });
 };
 const isPlaying = () => ready && yt.getPlayerState() === 1;
+/* La barra muestra solo la parte que suena: empieza vacía en el segundo 'inicio' y se llena hasta el final de la canción */
+const span = () => Math.max(1, yt.getDuration() - CONFIG.inicio);
 let userPaused = false, needResume = false;     // userPaused: pausó a propósito
 playBtn.onclick = () => { if (!ready) return; if (isPlaying()) { userPaused = true; yt.pauseVideo(); } else { userPaused = false; yt.playVideo(); } };
-bar.oninput = () => ready && yt.seekTo(yt.getDuration() * bar.value / 100, true);
-$('btn-prev').onclick = $('btn-next').onclick = () => ready && (yt.seekTo(0, true), yt.playVideo());
+bar.oninput = () => ready && yt.seekTo(CONFIG.inicio + span() * bar.value / 100, true);
+$('btn-prev').onclick = $('btn-next').onclick = () => { if (!ready) return; userPaused = false; yt.seekTo(CONFIG.inicio, true); yt.playVideo(); };
 $('btn-repeat').onclick = e => e.currentTarget.classList.toggle('on');
 $('btn-shuffle').onclick = e => e.currentTarget.classList.toggle('on');
 $('yt-player').style.cssText = 'position:fixed;left:-9999px;width:1px;height:1px';
